@@ -1,0 +1,161 @@
+:root {
+    --primary-dark: #313e56;
+    --accent-red: #5b1e1e;
+    --secondary-gray: #a2c3b6;
+    --background-light: #ffffff;
+    --text-color: #1a1a1a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-image: url('https://wallpaperaccess.com/full/933119.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+header {
+    background-color: var(--primary-dark);
+    color: var(--background-light);
+    padding: 1rem 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--background-light);
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.navbar-nav {
+    display: flex;
+    list-style: none;
+}
+
+.navbar-nav li {
+    margin-left: 1.5rem;
+}
+
+.navbar-nav a {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--background-light);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.3s ease;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.navbar-nav a:hover,
+.navbar-nav a.active {
+    color: var(--secondary-gray);
+}
+
+main {
+    padding: 2rem 0;
+}
+
+h1, h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: #000000;
+    letter-spacing: 1px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
+
+h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.content-wrapper {
+    display: flex;
+    gap: 2rem;
+}
+
+.about,
+.coming-soon {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(49, 62, 86, 0.1);
+}
+
+p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #000000;
+}
+
+footer {
+    background-color: var(--primary-dark);
+    color: var(--background-light);
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+footer p {
+    color: var(--background-light);
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-nav {
+        margin-top: 1rem;
+    }
+
+    .navbar-nav li {
+        margin-left: 0;
+        margin-right: 1rem;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}
