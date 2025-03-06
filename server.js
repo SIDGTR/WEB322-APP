@@ -5,8 +5,8 @@ been copied manually or electronically from any other source (including 3rd part
 Name: Sidharth Variyath
 Student ID:166987222
 Date:06-02-2025
-Cyclic Web App URL: _______________________________________________________
-GitHub Repository URL: ______________________________________________________
+Cyclic Web App URL: https://github.senecapolytechnic.ca/pages/svariyath/WEB322-app/
+GitHub Repository URL: https://github.com/SIDGTR/WEB322-APP
 ********************************************************************************/
 
 const express = require("express");
