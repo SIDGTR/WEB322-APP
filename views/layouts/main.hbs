@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidharth Variyath's Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="{{#if pageTitle}}{{pageTitle}}-page{{/if}}">
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a href="/" class="navbar-brand">WEB322 - SIDHARTH VARIYATH</a>
+                <ul class="navbar-nav">
+                    {{#navLink "/shop"}}Shop{{/navLink}}
+                    {{#navLink "/about"}}About{{/navLink}}
+                    {{#navLink "/items"}}Items{{/navLink}}
+                    {{#navLink "/categories"}}Categories{{/navLink}}
+                    {{#navLink "/items/add"}}Add Item{{/navLink}}
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        {{{body}}}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SID'S AUTO. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

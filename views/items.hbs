@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2>Items</h2>
+        <hr />
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Title</th>
+                        <th>Post Date</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Published</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each items}}
+                        <tr>
+                            <td>{{id}}</td>
+                            <td>{{title}}</td>
+                            <td>{{postDate}}</td>
+                            <td>{{price}}</td>
+                            <!-- Category links to filter by category -->
+                            <td><a href="/items?category={{category}}">{{category}}</a></td>
+                            <td>{{published}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Conditional rendering for error message -->
+        {{#unless items}}
+            <div class="col-md-12 text-center">
+                <strong>{{message}}</strong>
+            </div>
+        {{/unless}}
+    </div>
+</div>

@@ -3,7 +3,7 @@
     --accent-red: #5b1e1e;
     --secondary-gray: #a2c3b6;
     --background-light: #ffffff;
-    --text-color: #000000; /* Changed to black */
+    --text-color: #000000;
 }
 
 * {
@@ -15,7 +15,7 @@
 body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
-    color: var(--text-color); /* Now black */
+    color: var(--text-color);
     background-image: url('https://wallpaperaccess.com/full/933119.jpg');
     background-repeat: no-repeat;
     background-position: center;
@@ -31,7 +31,7 @@ body {
 
 header {
     background-color: var(--primary-dark);
-    color: var(--background-light); /* Still white for navbar text */
+    color: var(--background-light);
     padding: 1rem 0;
 }
 
@@ -45,7 +45,7 @@ header {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--background-light); /* Still white for navbar brand */
+    color: var(--background-light);
     text-decoration: none;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -62,7 +62,7 @@ header {
 
 .navbar-nav a {
     font-family: 'Orbitron', sans-serif;
-    color: var(--background-light); /* Still white for navbar links */
+    color: var(--background-light);
     text-decoration: none;
     font-weight: 400;
     transition: color 0.3s ease;
@@ -72,7 +72,7 @@ header {
 
 .navbar-nav a:hover,
 .navbar-nav a.active {
-    color: var(--secondary-gray); /* Still gray on hover */
+    color: var(--secondary-gray);
 }
 
 main {
@@ -81,7 +81,7 @@ main {
 
 h1, h2 {
     font-family: 'Orbitron', sans-serif;
-    color: var(--text-color); /* Now black */
+    color: var(--text-color);
     letter-spacing: 1px;
 }
 
@@ -114,12 +114,12 @@ h2 {
 p {
     margin-bottom: 1rem;
     font-size: 1rem;
-    color: var(--text-color); /* Now black */
+    color: var(--text-color);
 }
 
 footer {
     background-color: var(--primary-dark);
-    color: var(--background-light); /* Still white for footer text */
+    color: var(--background-light);
     text-align: center;
     padding: 1rem 0;
     margin-top: 2rem;
@@ -129,7 +129,7 @@ footer {
 }
 
 footer p {
-    color: var(--background-light); /* Still white for footer paragraph */
+    color: var(--background-light);
 }
 
 /* Form Styles */
@@ -141,7 +141,7 @@ footer p {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: var(--text-color); /* Now black */
+    color: var(--text-color);
 }
 
 .form-control {
@@ -151,7 +151,7 @@ footer p {
     border-radius: 0.25rem;
     box-sizing: border-box;
     font-size: 1rem;
-    color: var(--text-color); /* Now black */
+    color: var(--text-color);
     background-color: rgba(255, 255, 255, 0.8);
 }
 
@@ -163,7 +163,7 @@ footer p {
 
 .btn-primary {
     background-color: var(--accent-red);
-    color: var(--background-light); /* Still white for button text */
+    color: var(--background-light);
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 0.25rem;
@@ -176,6 +176,111 @@ footer p {
 
 .btn-primary:hover {
     background-color: var(--primary-dark);
+}
+
+/* Add Item Form Specific Styles */
+.add-item-form {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(49, 62, 86, 0.1);
+}
+
+/* Table Styles */
+.table-responsive {
+    margin-top: 2rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(49, 62, 86, 0.1);
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table th {
+    background-color: var(--primary-dark);
+    color: var(--background-light);
+    padding: 12px;
+    text-align: left;
+}
+
+.table td {
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 12px;
+}
+
+.table tr {
+    transition: all 0.3s ease;
+}
+
+.table tr:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table a {
+    color: var(--accent-red);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.table a:hover {
+    color: var(--primary-dark);
+}
+
+/* Shop page specific styles */
+body.shop-page {
+    background-image: none !important;
+    background-color: #f0f0f0 !important;
+}
+
+.shop-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.shop-item {
+    margin-bottom: 30px;
+}
+
+.shop-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.shop-sidebar {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.shop-sidebar h4 {
+    margin-top: 0;
+    color: var(--primary-dark);
+}
+
+.shop-sidebar .list-group-item {
+    background-color: transparent;
+    border: none;
+    padding: 5px 0;
+}
+
+.shop-sidebar .list-group-item a {
+    color: var(--accent-red);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.shop-sidebar .list-group-item a:hover {
+    color: var(--primary-dark);
 }
 
 @media (max-width: 768px) {

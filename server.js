@@ -1,12 +1,12 @@
 /*********************************************************************************
-WEB322 – Assignment 03
+WEB322 – Assignment 04
 I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part * of this assignment has
 been copied manually or electronically from any other source (including 3rd party web sites) or distributed to other students.
 Name: Sidharth Variyath
-Student ID:166987222
-Date:06-02-2025
-Cyclic Web App URL: _______________________________________________________
-GitHub Repository URL: ______________________________________________________
+Student ID: 166987222
+Date: 05-03-2025
+Cyclic Web App URL: https://github.senecapolytechnic.ca/pages/svariyath/WEB322-app/
+GitHub Repository URL: https://github.com/SIDGTR/WEB322-APP
 ********************************************************************************/
 
 const express = require("express");
@@ -15,8 +15,38 @@ const storeService = require("./store-service");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
+const exphbs = require('express-handlebars');
+const Handlebars = require('handlebars');
 
 const app = express();
+
+// Setup handlebars
+const hbs = exphbs.create({
+    extname: '.hbs',
+    helpers: {
+        navLink: function(url, options) {
+            return '<li' + 
+                ((url == app.locals.activeRoute) ? ' class="active" ' : '') + 
+                '><a href="' + url + '">' + options.fn(this) + '</a></li>';
+        },
+        equal: function (lvalue, rvalue, options) {
+            if (arguments.length < 3)
+                throw new Error("Handlebars Helper equal needs 2 parameters");
+            if (lvalue != rvalue) {
+                return options.inverse(this);
+            } else {
+                return options.fn(this);
+            }
+        },
+        safeHTML: function(context) {
+            return new Handlebars.SafeString(context);
+        }
+    }
+});
+
+app.engine('.hbs', hbs.engine);
+app.set('view engine', '.hbs');
+
 const PORT = process.env.PORT || 8080;
 
 // Configure Cloudinary
@@ -31,20 +61,25 @@ const upload = multer();
 
 app.use(express.static("public"));
 
-
-app.get("/", (req, res) => {
-    res.redirect("/about");
+// Add middleware for active route and viewing category
+app.use(function(req,res,next){
+    let route = req.path.substring(1);
+    app.locals.activeRoute = "/" + (isNaN(route.split('/')[1]) ? route.replace(/\/(?!.*)/, "") : route.replace(/\/(.*)/, ""));
+    app.locals.viewingCategory = req.query.category;
+    next();
 });
 
+app.get("/", (req, res) => {
+    res.redirect("/shop");
+});
 
 app.get("/about", (req, res) => {
-    res.sendFile(path.join(__dirname, "views/about.html"));
+    res.render("about", { pageTitle: "About" });
 });
 
 app.get("/items/add", (req, res) => {
-    res.sendFile(path.join(__dirname, "views/addItem.html"));
+    res.render("addItem", { pageTitle: "Add Item" });
 });
-
 
 app.post("/items/add", upload.single("featureImage"), (req, res) => {
     if (req.file) {
@@ -89,42 +124,84 @@ app.post("/items/add", upload.single("featureImage"), (req, res) => {
     }
 });
 
+app.get("/shop", async (req, res) => {
+    let viewData = {};
 
-app.get("/shop", (req, res) => {
-    storeService.getPublishedItems()
-        .then(items => res.json(items))
-        .catch(err => {
-            console.error("Error getting published items:", err);  
-            res.status(404).json({ message: "No published items found" });
-        });
+    try{
+        let items = [];
+
+        if(req.query.category){
+            items = await storeService.getPublishedItemsByCategory(req.query.category);
+        }else{
+            items = await storeService.getPublishedItems();
+        }
+
+        items.sort((a,b) => new Date(b.postDate) - new Date(a.postDate));
+        viewData.items = items;
+        viewData.item = items[0];
+
+    }catch(err){
+        viewData.message = "no results";
+    }
+
+    try{
+        let categories = await storeService.getCategories();
+        viewData.categories = categories;
+    }catch(err){
+        viewData.categoriesMessage = "no results";
+    }
+
+    res.render("shop", {data: viewData, pageTitle: "Shop"});
 });
 
+app.get('/shop/:id', async (req, res) => {
+    let viewData = {};
+
+    try {
+        let items = [];
+
+        if(req.query.category){
+            items = await storeService.getPublishedItemsByCategory(req.query.category);
+        } else {
+            items = await storeService.getPublishedItems();
+        }
+
+        items.sort((a,b) => new Date(b.postDate) - new Date(a.postDate));
+
+        viewData.items = items;
+
+        viewData.item = await storeService.getItemById(req.params.id);
+
+    } catch(err) {
+        viewData.message = "no results";
+    }
+
+    try {
+        let categories = await storeService.getCategories();
+        viewData.categories = categories;
+    } catch(err) {
+        viewData.categoriesMessage = "no results"
+    }
+
+    res.render("shop", {data: viewData, pageTitle: "Shop"});
+});
 
 app.get("/items", (req, res) => {
+    let getItems;
     if (req.query.category) {
-        storeService.getItemsByCategory(req.query.category)
-            .then(items => res.json(items))
-            .catch(err => {
-                console.error("Error getting items by category:", err);  
-                res.status(404).send("No items found for the specified category");
-            });
+        getItems = storeService.getItemsByCategory(req.query.category);
     } else if (req.query.minDate) {
-        storeService.getItemsByMinDate(req.query.minDate)
-            .then(items => res.json(items))
-            .catch(err => {
-                console.error("Error getting items by minDate:", err); 
-                res.status(404).send("No items found for the specified date");
-            });
+        getItems = storeService.getItemsByMinDate(req.query.minDate);
     } else {
-        storeService.getAllItems()
-            .then(items => res.json(items))
-            .catch(err => {
-                console.error("Error getting all items:", err); 
-                res.status(404).json({ message: "No items found" });
-            });
+        getItems = storeService.getAllItems();
     }
-});
 
+    getItems.then(items => {
+        res.render("items", {items: items, pageTitle: "Items"});
+    }).catch(err => {
+        res.render("items", {message: "no results", pageTitle: "Items"});
+    });
+});
 
 app.get("/item/:id", (req, res) => {
     storeService.getItemById(req.params.id)
@@ -135,21 +212,19 @@ app.get("/item/:id", (req, res) => {
         });
 });
 
-
 app.get("/categories", (req, res) => {
     storeService.getCategories()
-        .then(categories => res.json(categories))
+        .then(categories => {
+            res.render("categories", {categories: categories, pageTitle: "Categories"});
+        })
         .catch(err => {
-            console.error("Error getting categories:", err);  
-            res.status(404).json({ message: "No categories found" });
+            res.render("categories", {message: "no results", pageTitle: "Categories"});
         });
 });
 
-
 app.use((req, res) => {
-    res.status(404).send("Page Not Found");
+    res.status(404).render("404", { pageTitle: "Page Not Found" });
 });
-
 
 storeService.initialize()
     .then(() => {
