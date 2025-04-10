@@ -5,7 +5,7 @@ been copied manually or electronically from any other source (including 3rd part
 Name: Sidharth Variyath
 Student ID: 166987222
 Date: 09-04-2025
-Cyclic Web App URL: https://github.senecapolytechnic.ca/pages/svariyath/WEB322-app/
+Cyclic Web App URL: https://web322-app-9i25.onrender.com/shop
 GitHub Repository URL: https://github.com/SIDGTR/WEB322-APP
 ********************************************************************************/
 
