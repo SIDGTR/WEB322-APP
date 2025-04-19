@@ -11,12 +11,17 @@
   "author": "Sidharth Variyath",
   "license": "ISC",
   "dependencies": {
-    "cloudinary": "^2.5.1",
+    "bcryptjs": "^3.0.2",
+    "client-sessions": "^0.8.0",
+    "cloudinary": "^2.6.0",
     "express": "^4.21.2",
-    "express-handlebars": "^8.0.1",
+    "express-handlebars": "^8.0.2",
+    "mongoose": "^8.13.2",
     "multer": "^1.4.5-lts.1",
+    "path": "^0.12.7",
     "pg": "^8.14.1",
     "sequelize": "^6.37.7",
+    "store-service": "^2.0.2",
     "streamifier": "^0.1.1"
   },
   "engines": {

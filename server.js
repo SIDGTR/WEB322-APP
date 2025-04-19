@@ -1,14 +1,13 @@
 /*********************************************************************************
-WEB322 – Assignment 05
+WEB322 – Assignment 06
 I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part * of this assignment has
 been copied manually or electronically from any other source (including 3rd party web sites) or distributed to other students.
 Name: Sidharth Variyath
 Student ID: 166987222
-Date: 09-04-2025
+Date: 18-04-2025
 Cyclic Web App URL: https://web322-app-9i25.onrender.com/shop
 GitHub Repository URL: https://github.com/SIDGTR/WEB322-APP
 ********************************************************************************/
-
 
 const express = require("express");
 const path = require("path");
@@ -18,6 +17,9 @@ const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
 const exphbs = require('express-handlebars');
 const Handlebars = require('handlebars');
+const authData = require('./auth-service');
+const clientSessions = require('client-sessions');
+const bcrypt = require('bcryptjs'); 
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -27,7 +29,7 @@ cloudinary.config({
     api_key: "646929591171222",
     api_secret: "Gdflve-4yxR2Y_i14GcHOV5-NRk",
     secure: true
-  });
+});
 const upload = multer();
 
 app.engine('.hbs', exphbs.engine({
@@ -73,6 +75,27 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(clientSessions({
+    cookieName: "session",
+    secret: "your_secret_key_here",
+    duration: 2 * 60 * 60 * 1000,
+    activeDuration: 1000 * 60 * 20
+}));
+
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
+
+
+const ensureLogin = (req, res, next) => {
+    if (!req.session.user) {
+        res.redirect("/login");
+    } else {
+        next();
+    }
+};
+
 app.get("/", (req, res) => {
     res.redirect("/shop");
 });
@@ -81,15 +104,73 @@ app.get("/about", (req, res) => {
     res.render("about");
 });
 
-// Render add item form with categories
-app.get("/items/add", (req, res) => {
+app.get("/register", (req, res) => {
+    res.render("register");
+});
+
+app.post("/register", async (req, res) => {  
+    if (req.body.password !== req.body.password2) {
+        return res.render('register', {
+            errorMessage: 'Passwords do not match',
+            userName: req.body.userName
+        });
+    }
+
+    try {
+        const hash = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hash;  
+        await authData.registerUser(req.body);  
+
+        res.render('register', {
+            successMessage: "User created",
+            userName: req.body.userName 
+        });
+    } catch (err) {
+        res.render('register', {
+            errorMessage: err,
+            userName: req.body.userName 
+        });
+    }
+});
+
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+app.post("/login", (req, res) => {
+    req.body.userAgent = req.get('User-Agent');
+
+    authData.checkUser(req.body)
+        .then(user => {
+            req.session.user = {
+                userName: user.userName,
+                email: user.email,
+                loginHistory: user.loginHistory
+            };
+            res.redirect('/items');
+        })
+        .catch(err => res.render('login', {
+            errorMessage: err,
+            userName: req.body.userName
+        }));
+});
+
+app.get("/logout", (req, res) => {
+    req.session.reset();
+    res.redirect("/");
+});
+
+app.get("/userHistory", ensureLogin, (req, res) => {
+    res.render("userHistory");
+});
+
+app.get("/items/add",ensureLogin, (req, res) => {
     storeService.getCategories()
         .then(categories => res.render("addItem", { categories }))
         .catch(() => res.render("addItem", { categories: [] }));
 });
 
-// Handle add item form
-app.post("/items/add", upload.single("featureImage"), (req, res) => {
+app.post("/items/add",ensureLogin, upload.single("featureImage"), (req, res) => {
     if (req.file) {
         let streamUpload = (req) => {
             return new Promise((resolve, reject) => {
@@ -128,8 +209,7 @@ app.post("/items/add", upload.single("featureImage"), (req, res) => {
     }
 });
 
-// Show all items with optional filters
-app.get("/items", (req, res) => {
+app.get("/items",ensureLogin, (req, res) => {
     if (req.query.category) {
         storeService.getItemsByCategory(req.query.category)
             .then(items => res.render("items", { items }))
@@ -146,33 +226,32 @@ app.get("/items", (req, res) => {
 });
 
 // Delete item
-app.get("/items/delete/:id", (req, res) => {
+app.get("/items/delete/:id",ensureLogin, (req, res) => {
     storeService.deletePostById(req.params.id)
         .then(() => res.redirect("/items"))
         .catch(() => res.status(500).send("Unable to Remove Post / Post not found"));
 });
 
 // Categories view
-app.get("/categories", (req, res) => {
+app.get("/categories",ensureLogin, (req, res) => {
     storeService.getCategories()
         .then(categories => res.render("categories", { categories }))
         .catch(() => res.render("categories", { message: "no results" }));
 });
 
 // Add Category form
-app.get("/categories/add", (req, res) => {
+app.get("/categories/add",ensureLogin, (req, res) => {
     res.render("addCategory");
 });
 
-// Handle Add Category
-app.post("/categories/add", (req, res) => {
+app.post("/categories/add",ensureLogin, (req, res) => {
     storeService.addCategory(req.body)
         .then(() => res.redirect("/categories"))
         .catch(() => res.status(500).send("Unable to add category"));
 });
 
 // Delete Category
-app.get("/categories/delete/:id", (req, res) => {
+app.get("/categories/delete/:id",ensureLogin, (req, res) => {
     storeService.deleteCategoryById(req.params.id)
         .then(() => res.redirect("/categories"))
         .catch(() => res.status(500).send("Unable to Remove Category / Category not found"));
@@ -189,7 +268,7 @@ app.get("/shop", async (req, res) => {
 
         items.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
         viewData.items = items;
-        viewData.item = items[0];
+        viewData.item = viewData.items[0];
     } catch (err) {
         viewData.message = "no results";
     }
@@ -240,5 +319,6 @@ app.use((req, res) => {
 
 // Start Server
 storeService.initialize()
+    .then(authData.initialize)
     .then(() => app.listen(PORT, () => console.log(`Server started on http://localhost:${PORT}`)))
     .catch(err => console.log(`Failed to initialize store service: ${err}`));

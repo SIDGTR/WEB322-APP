@@ -15,9 +15,25 @@
                 <ul class="navbar-nav">
                     {{#navLink "/shop"}}Shop{{/navLink}}
                     {{#navLink "/about"}}About{{/navLink}}
+                    {{#if session.user}}
                     {{#navLink "/items"}}Items{{/navLink}}
                     {{#navLink "/categories"}}Categories{{/navLink}}
                     {{#navLink "/items/add"}}Add Item{{/navLink}}
+                    {{/if}}
+                </ul>
+                <ul class="navbar-nav right">
+                    {{#if session.user}}
+                    <li>
+                        <span>{{session.user.userName}}</span>
+                        <ul>
+                            <li><a href="/userHistory">User History</a></li>
+                            <li><a href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                    {{else}}
+                    {{#navLink "/register"}}Register{{/navLink}}
+                    {{#navLink "/login"}}Login{{/navLink}}
+                    {{/if}}
                 </ul>
             </div>
         </nav>

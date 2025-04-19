@@ -1,0 +1,23 @@
+<div class="user-history">
+    <h2>User Login History</h2>
+    {{#if session.user.loginHistory}}
+    <table>
+        <thead>
+            <tr>
+                <th>Date/Time</th>
+                <th>User Agent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each session.user.loginHistory}}
+            <tr>
+                <td>{{dateTime}}</td>
+                <td>{{userAgent}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+    <p>No login history available.</p>
+    {{/if}}
+</div>
